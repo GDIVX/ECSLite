@@ -147,6 +147,10 @@ namespace Assets.Scripts.ECSLite
         public void Destroy()
         {
             EntityManager.Instance.DestroyEntity(this);
+            if (_rootGameObject != null)
+            {
+                GameObject.Destroy(_rootGameObject);
+            }
         }
 
 
