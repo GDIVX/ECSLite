@@ -19,13 +19,12 @@ namespace Assets.Scripts.ECSLite
         //Dictionary of entities
         Dictionary<int, Entity> _entities = new();
 
-
+        
         internal Entity CreateEntity()
         {
-            var id = _entities.Count;
-            var entity = new Entity(id);
+            var entity = new Entity();
 
-            _entities.Add(id, entity);
+            _entities.Add(entity.ID, entity);
 
             OnEntityCreated?.Invoke(entity);
 
@@ -36,6 +35,41 @@ namespace Assets.Scripts.ECSLite
         {
             _entities.Remove(entity.ID);
             OnEntityDeleted?.Invoke(entity);
+        }
+
+        public Entity Find(int id)
+        {
+            return _entities[id];
+        }
+
+        public Entity[] FindAllEntitiesWithComponent<T>() where T : IComponent
+        {
+            var entities = new List<Entity>();
+
+            foreach (var entity in _entities.Values)
+            {
+                if (entity.HasComponent<T>())
+                {
+                    entities.Add(entity);
+                }
+            }
+
+            return entities.ToArray(); ;
+        }
+
+        public Entity[] FindAllEntitiesWithTag(string tag)
+        {
+            var entities = new List<Entity>();
+
+            foreach (var entity in _entities.Values)
+            {
+                if (entity.HasTag(tag))
+                {
+                    entities.Add(entity);
+                }
+            }
+
+            return entities.ToArray(); ;
         }
 
         internal void RegisterSystem(GameSystem gameSystem)
@@ -50,6 +84,18 @@ namespace Assets.Scripts.ECSLite
                 gameSystem.OnEntityCreated(entity);
                 entity.OnComponentAdded += gameSystem.OnComponentAdded;
             }
+        }
+
+        public int GenerateUniqueId()
+        {
+            int id;
+            do
+            {
+                id = Guid.NewGuid().GetHashCode(); // Use Guid to reduce the risk of collisions
+            }
+            while (_entities.ContainsKey(id));
+
+            return id;
         }
     }
 }

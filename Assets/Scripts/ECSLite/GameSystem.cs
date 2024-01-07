@@ -6,7 +6,7 @@ namespace Assets.Scripts.ECSLite
 {
     public abstract class GameSystem : MonoBehaviour
     {
-        [SerializeField] private List<Entity> entitiesToProcess = new List<Entity>();
+        [SerializeField] protected List<Entity> entitiesToProcess = new List<Entity>();
 
         private void Awake()
         {
@@ -14,14 +14,14 @@ namespace Assets.Scripts.ECSLite
             EntityManager.Instance.RegisterSystem(this);
         }
 
-        public void OnComponentAdded(Entity entity, IComponent component)
+        public virtual void OnComponentAdded(Entity entity, IComponent component)
         {
             // Check if the entity meets the criteria for processing by this system
             // If it does, add it to the entitiesToProcess list
             AddEntity(entity);
         }
 
-        public void OnComponentRemoved(Entity entity, IComponent component)
+        public virtual void OnComponentRemoved(Entity entity, IComponent component)
         {
             // If the entity no longer meets the criteria, remove it from the list
             if (!ShouldProcessEntity(entity))
@@ -30,12 +30,12 @@ namespace Assets.Scripts.ECSLite
             }
         }
 
-        public void OnEntityCreated(Entity entity)
+        public virtual void OnEntityCreated(Entity entity)
         {
             AddEntity(entity);
         }
 
-        public void OnEntityDeleted(Entity entity)
+        public virtual void OnEntityDeleted(Entity entity)
         {
             // Remove the entity from the list
             RemoveEntity(entity);
@@ -70,18 +70,28 @@ namespace Assets.Scripts.ECSLite
             }
         }
 
-        private void Update()
+        protected void UpdateEntities()
         {
             for (int i = 0; i < entitiesToProcess.Count; i++)
             {
                 Entity entity = entitiesToProcess[i];
-                UpdateEntity(entity);
+                OnUpdate(entity);
             }
         }
 
-        protected abstract void UpdateEntity(Entity entity);
 
-        // Implement this method to define the criteria for processing an entity
+
+        void OnDestroy()
+        {
+            // Unsubscribe from all the entities
+            for (int i = 0; i < entitiesToProcess.Count; i++)
+            {
+                Entity entity = entitiesToProcess[i];
+                entity.OnComponentRemoved -= OnComponentRemoved;
+            }
+        }
+
+        protected virtual void OnUpdate(Entity entity) { }
         protected abstract bool ShouldProcessEntity(Entity entity);
     }
 }

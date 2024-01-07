@@ -13,7 +13,28 @@ namespace Assets.Scripts.ECSLite.Common
                 && !entity.GetComponent<ModelComponent>().IsInitialized;
         }
 
-        protected override void UpdateEntity(Entity entity)
+        private void Start()
+        {
+            UpdateEntities();
+        }
+
+        public override void OnComponentAdded(Entity entity, IComponent component)
+        {
+            base.OnComponentAdded(entity, component);
+
+            OnUpdate(entity);
+        }
+
+        private void Update()
+        {
+            //look for entities we missed
+            if (entitiesToProcess.Count != 0)
+            {
+                UpdateEntities();
+            }
+        }
+
+        protected override void OnUpdate(Entity entity)
         {
             if (entity.GetComponent<ModelComponent>().IsInitialized)
             {

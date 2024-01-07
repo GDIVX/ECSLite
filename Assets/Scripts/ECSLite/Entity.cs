@@ -15,9 +15,9 @@ namespace Assets.Scripts.ECSLite
         public event Action<Entity, IComponent> OnComponentAdded;
         public event Action<Entity, IComponent> OnComponentRemoved;
 
-        internal Entity(int id)
+        internal Entity()
         {
-            this.ID = id;
+            this.ID = GetHashCode();
         }
 
         public static Entity Create()
@@ -157,6 +157,17 @@ namespace Assets.Scripts.ECSLite
         public override string ToString()
         {
             return $"Entity {ID}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Entity entity &&
+                   ID == entity.ID;
+        }
+
+        public override int GetHashCode()
+        {
+            return EntityManager.Instance.GenerateUniqueId();
         }
 
     }

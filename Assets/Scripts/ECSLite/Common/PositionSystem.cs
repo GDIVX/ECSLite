@@ -13,7 +13,12 @@ namespace Assets.Scripts.Demo
                 && entity.HasTag("HasGameObject");
         }
 
-        protected override void UpdateEntity(Entity entity)
+        private void Update()
+        {
+            UpdateEntities();
+        }
+
+        protected override void OnUpdate(Entity entity)
         {
             //get the position component
             var positionComponent = entity.GetComponent<PositionComponent>();

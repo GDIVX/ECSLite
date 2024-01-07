@@ -13,7 +13,12 @@ namespace Assets.Scripts.Demo
                 && entity.HasTag("Player");
         }
 
-        protected override void UpdateEntity(Entity entity)
+        private void FixedUpdate()
+        {
+            UpdateEntities();
+        }
+
+        protected override void OnUpdate(Entity entity)
         {
             var movementData = entity.GetComponent<MovementComponent>();
             var positionData = entity.GetComponent<PositionComponent>();
