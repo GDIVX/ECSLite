@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.ECSLite
 {
@@ -9,6 +10,7 @@ namespace Assets.Scripts.ECSLite
         public int ID { get; private set; }
         public List<IComponent> Components { get; private set; } = new();
 
+        public GameObject RootGameObject { get; set; }
 
         public event Action<Entity, IComponent> OnComponentAdded;
         public event Action<Entity, IComponent> OnComponentRemoved;

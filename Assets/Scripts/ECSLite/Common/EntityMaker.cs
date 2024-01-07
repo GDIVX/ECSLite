@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Assets.Scripts.Demo
 {
-    public class PlayerSpawner : MonoBehaviour
+    public class EntityMaker : MonoBehaviour
     {
-        [SerializeField] EntityDefinition _playerDef;
+        [SerializeField] EntityDefinition _entityDef;
         private void Start()
         {
-            _playerDef.CreateEntity();
+            _entityDef.CreateEntity();
         }
     }
 }
