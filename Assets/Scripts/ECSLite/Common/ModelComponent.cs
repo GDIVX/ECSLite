@@ -8,10 +8,7 @@ namespace Assets.Scripts.Demo
     public class ModelComponent : DataComponent
     {
         public GameObject Model;
+        public bool IsInitialized { get; set; } = false;
 
-        override public void Initialize()
-        {
-            Model = Instantiate(Model);
-        }
     }
 }

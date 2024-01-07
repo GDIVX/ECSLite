@@ -41,7 +41,7 @@ namespace Assets.Scripts.ECSLite
             RemoveEntity(entity);
         }
 
-        private void AddEntity(Entity entity)
+        protected void AddEntity(Entity entity)
         {
             // Check if the entity should be processed by this system
             if (!ShouldProcessEntity(entity)) return;
@@ -58,7 +58,7 @@ namespace Assets.Scripts.ECSLite
             entitiesToProcess.Add(entity);
         }
 
-        private void RemoveEntity(Entity entity)
+        protected void RemoveEntity(Entity entity)
         {
             //do we have this entity?
             if (entitiesToProcess.Contains(entity))
@@ -72,8 +72,9 @@ namespace Assets.Scripts.ECSLite
 
         private void Update()
         {
-            foreach (var entity in entitiesToProcess)
+            for (int i = 0; i < entitiesToProcess.Count; i++)
             {
+                Entity entity = entitiesToProcess[i];
                 UpdateEntity(entity);
             }
         }

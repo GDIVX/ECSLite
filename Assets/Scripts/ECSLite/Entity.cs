@@ -10,7 +10,7 @@ namespace Assets.Scripts.ECSLite
         public int ID { get; private set; }
         public List<IComponent> Components { get; private set; } = new();
 
-        public GameObject RootGameObject { get; set; }
+        GameObject _rootGameObject;
 
         public event Action<Entity, IComponent> OnComponentAdded;
         public event Action<Entity, IComponent> OnComponentRemoved;
@@ -108,6 +108,22 @@ namespace Assets.Scripts.ECSLite
                 }
             }
             return components.ToArray();
+        }
+
+        public GameObject GetRootGameObject()
+        {
+            //Check if we have "HasGameObject" tag
+            if (!HasTag("HasGameObject"))
+            {
+                return null;
+            }
+            //Do we have a game object instantiated?
+            if (_rootGameObject == null)
+            {
+                //Instantiate a new game object
+                _rootGameObject = new GameObject(ToString());
+            }
+            return _rootGameObject;
         }
 
         public bool HasTag(string tag)
